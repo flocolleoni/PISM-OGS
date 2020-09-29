@@ -1,0 +1,281 @@
+#(spinup.sh)  sia-only case: ignoring PARAM_TTPHI, PARAM_PPQ, PARAM_TEFO ...
+
+# =======================================================================
+# PISM std Greenland spinup:
+#    4 processors, 10000 a run, 20 km grid, constant-climate, sia dynamics
+# =======================================================================
+#(spinup.sh)           input   pism_Greenland_5km_v1.1.nc (found)
+#(spinup.sh)              NN = 4
+#(spinup.sh)      PISM_MPIDO = mpiexec -n 
+#(spinup.sh)     PISM_BIN = /Users/flo/Recherche/MODELS/PISM/pism-1.2/bin/  (already set)
+#(spinup.sh)       PISM_EXEC = pismr
+#(spinup.sh)          EXSTEP = 100
+#(spinup.sh)          EXVARS = diffusivity,temppabase,tempicethk_basal,bmelt,tillwat,velsurf_mag,mask,thk,topg,usurf
+#(spinup.sh)      executable = '/Users/flo/Recherche/MODELS/PISM/pism-1.2/bin//pismr'
+#(spinup.sh)         coupler = '-surface given -surface_given_file pism_Greenland_5km_v1.1.nc'
+#(spinup.sh)        dynamics = '-front_retreat_file pism_Greenland_5km_v1.1.nc -sia_e 3.0'
+
+Reading configuration parameters (pism_config) from file '/Users/flo/Recherche/MODELS/PISM/pism-1.2/share/pism/pism_config.nc'.
+PISMR (basic evolution run mode) stable v1.2.2 committed by Constantine Khrulev on 2020-08-28 12:22:53 -0800
+  setting computational box for ice from 'pism_Greenland_5km_v1.1.nc' and
+    user options: [-800.00 km, 700.00 km] x [-3400.00 km, -600.00 km] x [0 m, 4000.00 m]
+* Run time: [-10000.000, 0.000]  (10000.000 years, using the '365_day' calendar)
+# Allocating the geometry evolution model...
+# Allocating an iceberg remover (part of a calving model)...
+# Allocating a stress balance model...
+* Initializing bed smoother object with 5.000 km half-width ...
+# Allocating an energy balance model...
+# Allocating a subglacial hydrology model...
+# Allocating a basal yield stress model...
+# Allocating a bedrock thermal layer model...
+# Allocating a bed deformation model...
+# Allocating a surface process model or coupler...
+  - Option atmosphere.given.file is not set. Trying the input file 'pism_Greenland_5km_v1.1.nc'...
+  - Reading boundary conditions from 'pism_Greenland_5km_v1.1.nc'...
+# Allocating sea level forcing...
+# Allocating an ocean model or coupler...
+bootstrapping from file 'pism_Greenland_5km_v1.1.nc'...
+  reading 2D model state variables by regridding ...
+  FOUND  lon / standard_name=longitude 
+             \ min,max =   -92.130,   10.399 (degree_east)
+  FOUND  lat / standard_name=latitude  
+             \ min,max =    58.629,   84.482 (degree_north)
+  FOUND  thk / standard_name=land_ice_thickness
+             \ min,max =     0.000, 3325.986 (m)
+* Got projection parameters "+proj=stere +lat_0=90 +lat_ts=71 +lon_0=-39 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs" from "pism_Greenland_5km_v1.1.nc".
+* Using constant (zero) sea level...
+* Performing a 'fake' sea level forcing time-step for bootstrapping...
+* Initializing the dummy (no-op) bed deformation model...
+  FOUND  topg / standard_name=bedrock_altitude
+              \ min,max = -4574.027, 2568.967 (m)
+  absent dbdt / bedrock uplift rate
+              \ not found; using default constant    0.00 (mm year-1)
+* Initializing the constant ocean model...
+  Sub-shelf melt rate set to 0.051914 m/year.
+* Performing a 'fake' ocean model time-step for bootstrapping...
+* Initializing the surface model reading temperature at the top of the ice
+  and ice surface mass flux from a file...
+  - Reading boundary conditions from 'pism_Greenland_5km_v1.1.nc'...
+  FOUND  climatic_mass_balance / standard_name=land_ice_surface_specific_mass_balance_flux
+                               \ min,max = -2671.081, 3996.672 (kg m-2 year-1)
+  FOUND  ice_surface_temp / temperature of the ice at the ice surface but below firn processes
+                          \ min,max =   242.804,  280.699 (Kelvin)
+* Performing a 'fake' surface model time-step for bootstrapping...
+* Initializing the null-transport (till only) subglacial hydrology model ...
+  absent tillwat / effective thickness of subglacial water stored in till
+                 \ not found; using default constant    0.00 (m)
+* Initializing the bedrock thermal unit...
+  - Parameter energy.bedrock_thermal.file is not set. Reading geothermal flux from 'pism_Greenland_5km_v1.1.nc'...
+  FOUND  bheatflx / upward geothermal flux at the bottom bedrock surface
+                  \ min,max =    43.587,  147.814 (mW m-2)
+* Bootstrapping the enthalpy-based energy balance model from pism_Greenland_5km_v1.1.nc...
+  absent basal_melt_rate_grounded / ice basal melt rate from energy conservation, in ice thickness per time (valid in grounded areas)
+                                  \ not found; using default constant    0.00 (m year-1)
+ - Filling 3D ice temperatures using surface temperature (and mass balance for velocity estimate)...
+* Initializing the SIA stress balance modifier...
+  [using the Glen-Paterson-Budd-Lliboutry-Duval flow law]
+computational domain and grid:
+                grid size   76 x 141 x 101
+           spatial domain   1500.00 km x 2800.00 km x 4000.00 m
+     horizontal grid cell   20000 m x 20000 m
+  vertical spacing in ice   dz = 40.000 m (equal spacing)
+  - Reading boundary conditions from 'pism_Greenland_5km_v1.1.nc'...
+  - Reading boundary conditions from 'pism_Greenland_5km_v1.1.nc'...
+* Initializing the prescribed front retreat mechanism
+  using a time-dependent ice extent mask 'land_ice_area_fraction_retreat' in 'pism_Greenland_5km_v1.1.nc'...
+  saving scalar time-series to 'ts_g20km_10ka.nc'
+  times requested: -10000:yearly:0
+saving spatial time-series to 'ex_g20km_10ka.nc'; times requested: -10000:100:0
+variables requested: diffusivity,temppabase,tempicethk_basal,bmelt,tillwat,velsurf_mag,mask,thk,topg,usurf
+
+WARNING: output variables bwatvel,tauc are not available!
+
+running forward ...
+P         time:       ivol      iarea  max_diffusivity  max_hor_vel
+U         year   10^6_km^3  10^6_km^2         m^2 s^-1       m/year
+S   -10000.000:    2.91198    4.28640          0.00000      0.00000
+  bootstrapping to fill lithosphere temperatures in the bedrock thermal layer
+  using temperature at the top bedrock surface and geothermal flux
+  (bedrock temperature is linear in depth)...
+  FOUND  land_ice_area_fraction_retreat / maximum ice extent mask
+                                        \ min,max =     0.000,    1.000 (1)
+v$$Eh  diffusivity (overrides energy) (dt=10.09245 in 10 substeps; av dt_sub_mass_cont=1.00925)
+S    -9989.908:    2.91673    4.28640          1.36681      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=11.38127 in 10 substeps; av dt_sub_mass_cont=1.13813)
+S    -9978.526:    2.92211    4.28640          1.31684      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=11.22904 in 10 substeps; av dt_sub_mass_cont=1.12290)
+S    -9967.297:    2.92747    4.28640          1.34496      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=11.08198 in 10 substeps; av dt_sub_mass_cont=1.10820)
+S    -9956.215:    2.93278    4.28640          1.36161      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=10.88876 in 10 substeps; av dt_sub_mass_cont=1.08888)
+S    -9945.327:    2.93802    4.28640          1.38555      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=10.69104 in 10 substeps; av dt_sub_mass_cont=1.06910)
+S    -9934.635:    2.94319    4.28640          1.45968      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=10.07776 in 10 substeps; av dt_sub_mass_cont=1.00778)
+S    -9924.558:    2.94808    4.28640          1.55498      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=9.56543 in 10 substeps; av dt_sub_mass_cont=0.95654)
+S    -9914.992:    2.95272    4.28640          1.62441      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=9.21946 in 10 substeps; av dt_sub_mass_cont=0.92195)
+S    -9905.773:    2.95721    4.28640          1.67463      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=4.26127 in 6 substeps; av dt_sub_mass_cont=0.71021)
+S    -9901.512:    2.95928    4.28640          2.27020      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=1.34154 in 2 substeps; av dt_sub_mass_cont=0.67077)
+S    -9900.170:    2.95994    4.28640          2.26698      0.00000
+v$$Eh  reporting (-extra_times) (overrides diffusivity) (dt=0.17000)
+S    -9900.000:    2.96002    4.28640          2.26649      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.44068 in 10 substeps; av dt_sub_mass_cont=0.64407)
+S    -9893.559:    2.96316    4.28640          2.36555      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.89354 in 10 substeps; av dt_sub_mass_cont=0.68935)
+S    -9886.666:    2.96651    4.28640          2.18136      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=7.19509 in 10 substeps; av dt_sub_mass_cont=0.71951)
+S    -9879.471:    2.97000    4.28640          2.08466      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=7.56469 in 10 substeps; av dt_sub_mass_cont=0.75647)
+S    -9871.906:    2.97366    4.28640          1.97159      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=8.11628 in 10 substeps; av dt_sub_mass_cont=0.81163)
+S    -9863.790:    2.97756    4.28640          1.82317      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=8.90443 in 10 substeps; av dt_sub_mass_cont=0.89044)
+S    -9854.885:    2.98180    4.28640          1.65060      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=9.19130 in 10 substeps; av dt_sub_mass_cont=0.91913)
+S    -9845.694:    2.98614    4.28640          1.59330      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=9.47076 in 10 substeps; av dt_sub_mass_cont=0.94708)
+S    -9836.223:    2.99059    4.28640          1.62074      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=8.62486 in 10 substeps; av dt_sub_mass_cont=0.86249)
+S    -9827.598:    2.99463    4.28640          1.71686      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=8.62356 in 10 substeps; av dt_sub_mass_cont=0.86236)
+S    -9818.975:    2.99864    4.28640          1.79790      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=8.26102 in 10 substeps; av dt_sub_mass_cont=0.82610)
+S    -9810.714:    3.00246    4.28640          1.87180      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=7.96601 in 10 substeps; av dt_sub_mass_cont=0.79660)
+S    -9802.748:    3.00613    4.28640          1.93538      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=2.34046 in 3 substeps; av dt_sub_mass_cont=0.78015)
+S    -9800.407:    3.00720    4.28640          1.95874      0.00000
+v$$Eh  reporting (-extra_times) (overrides diffusivity) (dt=0.40734)
+S    -9800.000:    3.00739    4.28640          1.96343      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=7.65552 in 10 substeps; av dt_sub_mass_cont=0.76555)
+S    -9792.344:    3.01091    4.28640          2.00651      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=7.48742 in 10 substeps; av dt_sub_mass_cont=0.74874)
+S    -9784.857:    3.01433    4.28640          2.04793      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=7.34260 in 10 substeps; av dt_sub_mass_cont=0.73426)
+S    -9777.514:    3.01766    4.28640          2.08732      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=7.21610 in 10 substeps; av dt_sub_mass_cont=0.72161)
+S    -9770.298:    3.02092    4.28640          2.12114      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=7.10922 in 10 substeps; av dt_sub_mass_cont=0.71092)
+S    -9763.189:    3.02410    4.28640          2.15154      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=7.01189 in 10 substeps; av dt_sub_mass_cont=0.70119)
+S    -9756.177:    3.02721    4.28640          2.18099      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.92199 in 10 substeps; av dt_sub_mass_cont=0.69220)
+S    -9749.255:    3.03028    4.28640          2.20841      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.83799 in 10 substeps; av dt_sub_mass_cont=0.68380)
+S    -9742.417:    3.03329    4.28640          2.23472      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.76204 in 10 substeps; av dt_sub_mass_cont=0.67620)
+S    -9735.655:    3.03626    4.28640          2.25909      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.68877 in 10 substeps; av dt_sub_mass_cont=0.66888)
+S    -9728.966:    3.03918    4.28640          2.28378      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.61982 in 10 substeps; av dt_sub_mass_cont=0.66198)
+S    -9722.347:    3.04205    4.28640          2.30687      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.55481 in 10 substeps; av dt_sub_mass_cont=0.65548)
+S    -9715.792:    3.04487    4.28640          2.32966      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.49315 in 10 substeps; av dt_sub_mass_cont=0.64931)
+S    -9709.299:    3.04765    4.28640          2.35118      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=6.43406 in 10 substeps; av dt_sub_mass_cont=0.64341)
+S    -9702.865:    3.05038    4.28640          2.37289      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=2.55601 in 4 substeps; av dt_sub_mass_cont=0.63900)
+S    -9700.309:    3.05146    4.28640          2.38600      0.00000
+v$$Eh  reporting (-extra_times) (overrides diffusivity) (dt=0.30861)
+S    -9700.000:    3.05159    4.28640          2.38752      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.34443 in 10 substeps; av dt_sub_mass_cont=0.63444)
+S    -9693.656:    3.05427    4.28640          2.40661      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.28301 in 10 substeps; av dt_sub_mass_cont=0.62830)
+S    -9687.373:    3.05691    4.28640          2.43064      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.22115 in 10 substeps; av dt_sub_mass_cont=0.62211)
+S    -9681.151:    3.05951    4.28640          2.45500      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.15912 in 10 substeps; av dt_sub_mass_cont=0.61591)
+S    -9674.992:    3.06208    4.28640          2.48051      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.09009 in 10 substeps; av dt_sub_mass_cont=0.60901)
+S    -9668.902:    3.06460    4.28640          2.50938      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.03468 in 10 substeps; av dt_sub_mass_cont=0.60347)
+S    -9662.868:    3.06710    4.28640          2.52598      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=6.00198 in 10 substeps; av dt_sub_mass_cont=0.60020)
+S    -9656.866:    3.06958    4.28640          2.54016      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.96559 in 10 substeps; av dt_sub_mass_cont=0.59656)
+S    -9650.900:    3.07203    4.28640          2.55653      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.92603 in 10 substeps; av dt_sub_mass_cont=0.59260)
+S    -9644.974:    3.07446    4.28640          2.57404      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.88541 in 10 substeps; av dt_sub_mass_cont=0.58854)
+S    -9639.089:    3.07687    4.28640          2.59191      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.84549 in 10 substeps; av dt_sub_mass_cont=0.58455)
+S    -9633.243:    3.07925    4.28640          2.60931      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.80738 in 10 substeps; av dt_sub_mass_cont=0.58074)
+S    -9627.436:    3.08161    4.28640          2.62618      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.77098 in 10 substeps; av dt_sub_mass_cont=0.57710)
+S    -9621.665:    3.08395    4.28640          2.64244      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.73648 in 10 substeps; av dt_sub_mass_cont=0.57365)
+S    -9615.928:    3.08627    4.28640          2.65799      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.70405 in 10 substeps; av dt_sub_mass_cont=0.57040)
+S    -9610.224:    3.08857    4.28640          2.67270      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=5.67382 in 10 substeps; av dt_sub_mass_cont=0.56738)
+S    -9604.550:    3.09085    4.28640          2.68653      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=3.95390 in 7 substeps; av dt_sub_mass_cont=0.56484)
+S    -9600.596:    3.09243    4.28640          2.69764      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=0.56409)
+S    -9600.032:    3.09266    4.28640          2.69828      0.00000
+v$$Eh  reporting (-extra_times) (overrides diffusivity) (dt=0.03233)
+S    -9600.000:    3.09267    4.28640          2.70339      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.61949 in 10 substeps; av dt_sub_mass_cont=0.56195)
+S    -9594.381:    3.09491    4.28640          2.71247      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.59522 in 10 substeps; av dt_sub_mass_cont=0.55952)
+S    -9588.785:    3.09712    4.28640          2.72247      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.57437 in 10 substeps; av dt_sub_mass_cont=0.55744)
+S    -9583.211:    3.09931    4.28640          2.73318      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.55231 in 10 substeps; av dt_sub_mass_cont=0.55523)
+S    -9577.659:    3.10149    4.28640          2.74396      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.53098 in 10 substeps; av dt_sub_mass_cont=0.55310)
+S    -9572.128:    3.10365    4.28640          2.75440      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.51080 in 10 substeps; av dt_sub_mass_cont=0.55108)
+S    -9566.617:    3.10579    4.28640          2.76424      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.49211 in 10 substeps; av dt_sub_mass_cont=0.54921)
+S    -9561.125:    3.10791    4.28640          2.77333      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.47460 in 10 substeps; av dt_sub_mass_cont=0.54746)
+S    -9555.650:    3.11002    4.28640          2.78206      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.45781 in 10 substeps; av dt_sub_mass_cont=0.54578)
+S    -9550.192:    3.11211    4.28640          2.79051      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.44143 in 10 substeps; av dt_sub_mass_cont=0.54414)
+S    -9544.751:    3.11419    4.28640          2.79892      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.42525 in 10 substeps; av dt_sub_mass_cont=0.54253)
+S    -9539.326:    3.11624    4.28640          2.80719      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.40967 in 10 substeps; av dt_sub_mass_cont=0.54097)
+S    -9533.916:    3.11828    4.28640          2.81512      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.39488 in 10 substeps; av dt_sub_mass_cont=0.53949)
+S    -9528.521:    3.12030    4.28640          2.82267      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.38092 in 10 substeps; av dt_sub_mass_cont=0.53809)
+S    -9523.140:    3.12230    4.28640          2.82981      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.36777 in 10 substeps; av dt_sub_mass_cont=0.53678)
+S    -9517.772:    3.12428    4.28640          2.83658      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.35545 in 10 substeps; av dt_sub_mass_cont=0.53554)
+S    -9512.417:    3.12626    4.28640          2.84292      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.34395 in 10 substeps; av dt_sub_mass_cont=0.53440)
+S    -9507.073:    3.12822    4.28640          2.84886      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=5.33308 in 10 substeps; av dt_sub_mass_cont=0.53331)
+S    -9501.740:    3.13018    4.28640          2.85457      0.00000
+v$$Eh  diffusivity (overrides reporting (-extra_times)) (dt=1.59754 in 3 substeps; av dt_sub_mass_cont=0.53251)
+S    -9500.142:    3.13076    4.28640          2.86011      0.00000
+v$$Eh  reporting (-extra_times) (overrides diffusivity) (dt=0.14236)
+S    -9500.000:    3.13081    4.28640          2.86006      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.31186 in 10 substeps; av dt_sub_mass_cont=0.53119)
+S    -9494.688:    3.13275    4.28640          2.86742      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.30441 in 10 substeps; av dt_sub_mass_cont=0.53044)
+S    -9489.384:    3.13468    4.28640          2.86732      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.30108 in 10 substeps; av dt_sub_mass_cont=0.53011)
+S    -9484.083:    3.13660    4.28640          2.87130      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.29246 in 10 substeps; av dt_sub_mass_cont=0.52925)
+S    -9478.790:    3.13850    4.28640          2.87617      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.28417 in 10 substeps; av dt_sub_mass_cont=0.52842)
+S    -9473.506:    3.14040    4.28640          2.88027      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.27730 in 10 substeps; av dt_sub_mass_cont=0.52773)
+S    -9468.229:    3.14228    4.28640          2.88381      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.27109 in 10 substeps; av dt_sub_mass_cont=0.52711)
+S    -9462.958:    3.14415    4.28640          2.88714      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.26513 in 10 substeps; av dt_sub_mass_cont=0.52651)
+S    -9457.692:    3.14601    4.28640          2.89037      0.00000
+v$$Eh  diffusivity (overrides energy) (dt=5.25930 in 10 substeps; av dt_sub_mass_cont=0.52593)
+S    -9452.433:    3.14786    4.28640          2.89357      0.00000

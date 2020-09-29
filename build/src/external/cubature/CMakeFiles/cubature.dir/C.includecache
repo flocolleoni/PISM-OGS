@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/flo/Recherche/MODELS/PISM/pism-1.2/sources/src/external/cubature/cubature.c
+stdio.h
+-
+stdlib.h
+-
+math.h
+-
+limits.h
+-
+float.h
+-
+cubature.h
+/Users/flo/Recherche/MODELS/PISM/pism-1.2/sources/src/external/cubature/cubature.h
+
+/Users/flo/Recherche/MODELS/PISM/pism-1.2/sources/src/external/cubature/cubature.h
+stdio.h
+-
+stdlib.h
+-
+math.h
+-
+limits.h
+-
+float.h
+-
+
