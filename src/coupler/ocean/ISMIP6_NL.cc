@@ -157,7 +157,7 @@ void ISMIP6::update_impl(const Geometry &geometry, double t, double dt) {
 MaxTimestep ISMIP6::max_timestep_impl(double t) const {
   (void) t;
 
-  return MaxTimestep("ocean ismip6");
+  return MaxTimestep("ocean ismip6nl");
 }
 
 
