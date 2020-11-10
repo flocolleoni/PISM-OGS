@@ -140,21 +140,21 @@ void ISMIP6_NL::update_impl(const Geometry &geometry, double t, double dt) {
   // FLO m_shelf_base_mass_flux->copy_from(*m_shelfbmassflux);
 
   const IceModelVec2S &H = geometry.ice_thickness;
-
+  const IceModelVec2CellType &cell_type = geometry.cell_type;
 
   // FIXME: m_n_shelves is not really the number of shelves.
 //  m_n_shelves = m_geometry->ice_shelf_mask().max() + 1;
 
-  std::vector<double> thermal_forcing(m_n_basins);
+  IceModelVec2S thermal_forcing;
   std::vector<double> TF_avg(m_n_basins);
 
   // Set shelf base temperature to the melting temperature at the base (depth within the
   // ice equal to ice thickness).
   // FLO melting_point_temperature(H, *m_shelf_base_temperature);
 
-  compute_thermal_forcing(H, *m_shelfbtemp, *m_salinity_ocean, thermal_forcing)
+  compute_thermal_forcing(H, *m_shelfbtemp, *m_salinity_ocean, thermal_forcing);
 
-  compute_avg_thermal_forcing(m_basin_mask, m_geometry->ice_shelf_mask(), thermal_forcing, TF_avg); // per basin
+  compute_avg_thermal_forcing(cell_type,m_basin_mask, thermal_forcing, TF_avg); // per basin
 
   mass_flux(thermal_forcing, TF_avg, *m_shelf_base_mass_flux); // call to ISMIP6 quadratic parametrisation
 
@@ -201,20 +201,17 @@ const double
 }
 
 
-void ISMIP6_NL::compute_thermal_forcing(const IceModelVec2S &ice_thickness, const IceModelVec2S &shelfbtemp, const IceModelVec2S &salinity_ocean, std::vector<double> &thermal_forcing) const {
+void ISMIP6_NL::compute_thermal_forcing(const IceModelVec2S &ice_thickness,
+                                        const IceModelVec2S &shelfbtemp,
+                                        const IceModelVec2S &salinity_ocean,
+                                        IceModelVec2S &thermal_forcing) const {
+
+
   const double
-//    melt_factor       = m_config->get_number("ocean.pik_melt_factor"),
-//    L                 = m_config->get_number("constants.fresh_water.latent_heat_of_fusion"),
     sea_water_density = m_config->get_number("constants.sea_water.density"),
-    ice_density       = m_config->get_number("constants.ice.density"),
-//    c_p_ocean         = 3974.0, // J/(K*kg), specific heat capacity of ocean mixed layer
-//    gamma_0           = 3.52e-4;   // m/s, 11100 m/yr from local_MeanAnt method (Jourdain et al. 2020)
-    //ocean_salinity    = 35.0;   // g/kg //********************* TO DO: implement also variable salinity in T_f //
-    // FLO T_ocean           = units::convert(m_sys, -1.7, "Celsius", "Kelvin"); //Default in PISM-PIK
+    ice_density       = m_config->get_number("constants.ice.density");
 
-  //FIXME: gamma_T should be a function of the friction velocity, not a const
-
-  IceModelVec::AccessList list{&ice_thickness, &shelfbtemp, &salinity_ocean, &result};
+  IceModelVec::AccessList list{&ice_thickness, &shelfbtemp, &salinity_ocean};
 
   for (Points p(*m_grid); p; p.next()) {
     const int i = p.i(), j = p.j();
@@ -225,101 +222,88 @@ void ISMIP6_NL::compute_thermal_forcing(const IceModelVec2S &ice_thickness, cons
     // Pressure Melting Temperature, see beckmann_goosse03 eq. 2 for
     // details]
   double
-     shelfbaseelev = - (ice_density / sea_water_density) * ice_thickness(i,j);
-     T_f           = 273.15 + (0.0832 -0.0575 * salinity_ocean(i,j) + 7.59e-4 * shelfbaseelev);
-    // add 273.15 to convert from Celsius to Kelvin
+     shelfbaseelev = - (ice_density / sea_water_density) * ice_thickness(i,j),
+     T_f           = 273.15 + (0.0832 -0.0575 * salinity_ocean(i,j) + 7.59e-4 * shelfbaseelev); // add 273.15 to convert from Celsius to Kelvin
 
-    // compute ocean_heat_flux according to beckmann_goosse03
-    // positive, if T_oc > T_ice ==> heat flux FROM ocean TO ice
-    // FLO double ocean_heat_flux = melt_factor * sea_water_density * c_p_ocean * gamma_T * (T_ocean - T_f); // in W/m^2
+  thermal_forcing(i,j) = shelfbtemp(i,j) - T_f;
 
-
-    // NON-LOCAL ISMIP6 Parameterisation (see Jourdain et al., 2019)
-
-            thermal_forcing = shelfbtemp(i,j) - T_f;
-            result(i,j) *= thermal_forcing;
-      }
-
-    }
-
-
-    //! Compute temperature and salinity input from ocean data by averaging.
-
-    //! We average the ocean data over the continental shelf reagion for each basin.
-    //! We use dummy ocean data if no such average can be calculated.
-    void ISMIP6_NL::compute_avg_thermal_forcing(const IceModelVec2CellType &cell_type,
-                                             const IceModelVec2Int &basin_mask,
-                                             const IceModelVec2S &thermal_forcing,
-                                             IceModelVec2S &result) {
-
-  IceModelVec::AccessList list{&cell_type &thermal_forcing, &basin_mask};
-
-  const IceModelVec2S shelf_mask;
-  // Retrieve floating points
-  for (Points p(*m_grid); p; p.next()) {
-      const int i = p.i(), j = p.j();
-
-      auto M = cell_type.int_box(i, j);
-
-      if (M == MASK_FLOATING) {
-          shelf_mask(i, j) = 1;
-      } else {
-          shelf_mask(i, j) = 0;
-      }
   }
 
+}
 
-      std::vector<double> basin_TF(m_n_shelves,m_n_basins);
-      basin_TF.resize(m_n_basins);
-      for (int basin_id = 0; basin_id < m_n_basins; basin_id++) {
-        basin_TF[basin_id] = 0.0;
-      }
 
-      IceModelVec::AccessList list{ &thermal_forcing, &basin_mask, &mask};
-      std::vector<std::vector<int> > n_shelf_cells_per_basin(m_n_shelves, std::vector<int>(m_n_basins, 0));
+// This routine should calculate the averaged thermal-forcing
+// over the sum of ice shelves points contained in each drainage basins
+void ISMIP6_NL::compute_avg_thermal_forcing(const IceModelVec2CellType &cell_type,
+                                         const IceModelVec2Int &basin_mask,
+                                         IceModelVec2S &thermal_forcing,
+                                         IceModelVec2S &TF_avg) {
 
-      // 1) count the number of cells in each shelf
-      // 2) count the number of cells in the intersection of each shelf with all the basins
-      {
-        for (Points p(*m_grid); p; p.next()) {
-          const int i = p.i(), j = p.j();
-          int s = shelf_mask.as_int(i, j);
-          int b = basin_mask.as_int(i, j);
-          n_shelf_cells_per_basin[s][b]++;
-          basin_TF[s][b] = thermal_forcing(i, j);
-        }
+  IceModelVec::AccessList list{&cell_type, &thermal_forcing, &basin_mask};
 
-        // compute the sum for each basin for region that intersects with the
-        // area covered by an ice shelf.
-      for (int s = 0; s < m_n_shelves; s++) {
-        for (int b = 0; b < m_n_basins; b++) {
-          n_shelf_cells_per_basin[s][b] = GlobalSum(m_grid->com, n_shelf_cells_per_basin[s][b]);
-          basin_TF[s][b] = GlobalSum(m_grid->com, basin_TF[s][b]);
+  // Retrieve floating points
+  const IceModelVec2S shelf_mask;
+  for (Points p(*m_grid); p; p.next()) {
+    const int i = p.i(), j = p.j();
 
-        }
-      }
-     }
+    auto M = cell_type(i, j);
+    if (M == MASK_FLOATING) {
+      shelf_mask(i, j) = 1.0;
+    } else {
+      shelf_mask(i, j) = 0.0;
+    }
+  }
 
-      for (Points p(*m_grid); p; p.next()) {
-        const int i = p.i(), j = p.j();
+// BELOW THIS LINE THIS IS DIRECTLY COPIED FROM PICO.cc AND THUS NOT YET ADAPTED
+// TO THIS ROUTINE--- TO DO --- FLO Nov 10, 2020.
+  std::vector<double> basin_TF(m_n_shelves,m_n_basins);
+  basin_TF.resize(m_n_basins);
+  for (int basin_id = 0; basin_id < m_n_basins; basin_id++) {
+    basin_TF[basin_id] = 0.0;
+  }
 
-        // make sure all temperatures are zero at the beginning of each time step
-        TF_avg(i, j) = 0.0; // in K
+  std::vector<std::vector<int> > n_shelf_cells_per_basin(m_n_shelves, std::vector<int>(m_n_basins, 0));
 
-        int s = shelf_mask.as_int(i, j);
-
-        if (mask.as_int(i, j) == MASK_FLOATING and s > 0) {
-          // note: shelf_mask = 0 in lakes
-
-          // weighted input depending on the number of shelf cells in each basin
-          for (int b = 1; b < m_n_basins; b++) { //Note: b=0 yields nan
-            TF_avg(i, j) += basin_TF[s][b]/ n_shelf_cells_per_basin[s][b];
-          }
-        }
-      }
-        result.copy_from(TF_avg);
+  // 1) count the number of cells in each shelf
+  // 2) count the number of cells in the intersection of each shelf with all the basins
+  {
+    for (Points p(*m_grid); p; p.next()) {
+      const int i = p.i(), j = p.j();
+      int s = shelf_mask.as_int(i, j);
+      int b = basin_mask.as_int(i, j);
+      n_shelf_cells_per_basin[s][b]++;
+      basin_TF[s][b] = thermal_forcing(i, j);
     }
 
+    // compute the sum for each basin for region that intersects with the
+    // area covered by an ice shelf.
+  for (int s = 0; s < m_n_shelves; s++) {
+    for (int b = 0; b < m_n_basins; b++) {
+      n_shelf_cells_per_basin[s][b] = GlobalSum(m_grid->com, n_shelf_cells_per_basin[s][b]);
+      basin_TF[s][b] = GlobalSum(m_grid->com, basin_TF[s][b]);
+
+    }
+  }
+ }
+
+  for (Points p(*m_grid); p; p.next()) {
+    const int i = p.i(), j = p.j();
+
+    // make sure all temperatures are zero at the beginning of each time step
+    TF_avg(i, j) = 0.0; // in K
+
+    int s = shelf_mask.as_int(i, j);
+
+    if (mask.as_int(i, j) == MASK_FLOATING and s > 0) {
+      // note: shelf_mask = 0 in lakes
+
+      // weighted input depending on the number of shelf cells in each basin
+      for (int b = 1; b < m_n_basins; b++) { //Note: b=0 yields nan
+        TF_avg(i, j) += basin_TF[s][b]/ n_shelf_cells_per_basin[s][b];
+      }
+    }
+  }
+}
 
 
 
@@ -327,18 +311,15 @@ void ISMIP6_NL::compute_thermal_forcing(const IceModelVec2S &ice_thickness, cons
 /*!
  * Assumes that mass flux is proportional to the shelf-base heat flux.
  */
-void ISMIP6_NL::mass_flux(std::vector<double> &thermal_forcing, std::vector<double> &TF_avg, IceModelVec2S &result) const {
+void ISMIP6_NL::mass_flux(const IceModelVec2S &thermal_forcing,
+                          std::vector<double> &TF_avg,
+                          IceModelVec2S &result) const {
   const double
-//    melt_factor       = m_config->get_number("ocean.pik_melt_factor"),
     L                 = m_config->get_number("constants.fresh_water.latent_heat_of_fusion"),
     sea_water_density = m_config->get_number("constants.sea_water.density"),
     ice_density       = m_config->get_number("constants.ice.density"),
     c_p_ocean         = 3974.0, // J/(K*kg), specific heat capacity of ocean mixed layer
     gamma_0           = 3.52e-4;   // m/s, 11100 m/yr from local_MeanAnt method (Jourdain et al. 2020)
-    //ocean_salinity    = 35.0;   // g/kg //********************* TO DO: implement also variable salinity in T_f //
-    // FLO T_ocean           = units::convert(m_sys, -1.7, "Celsius", "Kelvin"); //Default in PISM-PIK
-
-  //FIXME: gamma_T should be a function of the friction velocity, not a const
 
   IceModelVec::AccessList list{&thermal_forcing, &TF_avg, &result};
 

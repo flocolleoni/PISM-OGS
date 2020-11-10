@@ -60,10 +60,10 @@ private:
   IceModelVec2T::Ptr m_shelfbtemp;
   IceModelVec2T::Ptr m_salinity_ocean;
 
-  void compute_thermal_forcing(const IceModelVec2S &ice_thickness, const IceModelVec2S &m_shelfbtemp, const IceModelVec2S &m_salinity_ocean, std::vector<double> &thermal_forcing);
-  void compute_avg_thermal_forcing(const IceModelVec2CellType &mask, const IceModelVec2Int &m_basin_mask, std::vector<double> &thermal_forcing, std::vector<double> &TF_avg); // per basin
+  void compute_thermal_forcing(const IceModelVec2S &ice_thickness, const IceModelVec2S &m_shelfbtemp, const IceModelVec2S &m_salinity_ocean, IceModelVec2S &thermal_forcing);
+  void compute_avg_thermal_forcing(const IceModelVec2CellType &mask, const IceModelVec2Int &m_basin_mask, IceModelVec2S &thermal_forcing, std::vector<double> &TF_avg); // per basin
   void melting_point_temperature(const IceModelVec2S &depth, IceModelVec2S &result) const;
-  void mass_flux(std::vector<double> &thermal_forcing, std::vector<double> &TF_avg, IceModelVec2S &result) const;
+  void mass_flux(IceModelVec2S &thermal_forcing, std::vector<double> &TF_avg, IceModelVec2S &result) const;
 
   int m_n_basins, m_n_shelves;
 };
