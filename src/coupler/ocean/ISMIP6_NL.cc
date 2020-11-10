@@ -247,24 +247,26 @@ void ISMIP6_NL::compute_thermal_forcing(const IceModelVec2S &ice_thickness, cons
 
     //! We average the ocean data over the continental shelf reagion for each basin.
     //! We use dummy ocean data if no such average can be calculated.
-    void ISMIP6_NL::compute_avg_thermal_forcing(const IceModelVec2Int &basin_mask,
-                                             const IceModelVec2CellType &mask,
+    void ISMIP6_NL::compute_avg_thermal_forcing(const IceModelVec2CellType &cell_type,
+                                             const IceModelVec2Int &basin_mask,
                                              const IceModelVec2S &thermal_forcing,
                                              IceModelVec2S &result) {
 
+  IceModelVec::AccessList list{&cell_type &thermal_forcing, &basin_mask};
 
-      const IceModelVec2S shelf_mask;
-      // Retrieve floating points
-      for (Points p(*m_grid); p; p.next()) {
-        const int i = p.i(), j = p.j();
+  const IceModelVec2S shelf_mask;
+  // Retrieve floating points
+  for (Points p(*m_grid); p; p.next()) {
+      const int i = p.i(), j = p.j();
 
-        if (mask.as_int(i, j) == MASK_FLOATING) {
+      auto M = cell_type.int_box(i, j);
+
+      if (M == MASK_FLOATING) {
           shelf_mask(i, j) = 1;
-          m_n_shelves++;
-        } else {
+      } else {
           shelf_mask(i, j) = 0;
-        }
       }
+  }
 
 
       std::vector<double> basin_TF(m_n_shelves,m_n_basins);
