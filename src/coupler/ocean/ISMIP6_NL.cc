@@ -43,7 +43,7 @@ ISMIP6::ISMIP6(IceGrid::ConstPtr g)
   m_shelf_base_temperature = allocate_shelf_base_temperature(g);
   m_shelf_base_mass_flux   = allocate_shelf_base_mass_flux(g);
 
-  ForcingOptions opt(*m_grid->ctx(), "ocean.ismip6");
+  ForcingOptions opt(*m_grid->ctx(), "ocean.ismip6nl");
 
   {
     unsigned int buffer_size = m_config->get_number("input.forcing.buffer_size");
