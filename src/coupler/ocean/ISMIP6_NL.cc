@@ -283,7 +283,7 @@ void ISMIP6_NL::compute_avg_thermal_forcing(const IceModelVec2Int &basin_mask,
       int s = shelf_mask.as_int(i, j);
       int b = basin_mask.as_int(i, j);
       n_shelf_cells_per_basin[s][b]++;
-      basin_TF[s][b] += thermal_forcing(i, j);
+      basin_TF[s][b] = thermal_forcing(i, j);
     }
 
     // compute the sum for each basin for region that intersects with the
