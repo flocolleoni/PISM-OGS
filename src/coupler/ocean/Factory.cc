@@ -25,6 +25,7 @@
 #include "ConstantPIK.hh"
 #include "GivenClimate.hh"
 #include "ISMIP6.hh"
+#include "ISMIP6_NL.hh"
 #include "Delta_T.hh"
 #include "Delta_SMB.hh"
 #include "Frac_MBP.hh"
@@ -45,6 +46,7 @@ Factory::Factory(IceGrid::ConstPtr g)
   add_model<Pico>("pico");
   add_model<Given>("given");
   add_model<ISMIP6>("ismip6");
+  add_model<ISMIP6_NL>("ismip6nl");
 
   add_modifier<Anomaly>("anomaly");
   add_modifier<Cache>("cache");
