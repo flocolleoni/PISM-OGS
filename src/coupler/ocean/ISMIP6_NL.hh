@@ -38,34 +38,28 @@ namespace ocean {
 //! @f$T_{o}@f$ are the heat capacity and temperature of the ocean mixed
 //! layer, @f$T_{f}@f$ is the freezing temperature of ocean water at the
 //! shelf bottom.
-class ISMIP6_NL : public CompleteOceanModel {
+class ISMIP6 : public CompleteOceanModel {
 public:
-  ISMIP6_NL(IceGrid::ConstPtr g);
-  virtual ~ISMIP6_NL();
+  ISMIP6(IceGrid::ConstPtr g);
+  virtual ~ISMIP6();
 
 private:
   MaxTimestep max_timestep_impl(double t) const;
   void update_impl(const Geometry &geometry, double my_t, double my_dt);
   void init_impl(const Geometry &geometry);
 
-  void define_model_state_impl(const File &output) const;
-  void write_model_state_impl(const File &output) const;
-
   // outputs variables from ISMIP6 routine
   const IceModelVec2S& shelf_base_temperature_impl() const;
   const IceModelVec2S& shelf_base_mass_flux_impl() const;
 
   // Variables to be read from input file
-  IceModelVec2Int m_basin_mask;
   IceModelVec2T::Ptr m_shelfbtemp;
   IceModelVec2T::Ptr m_salinity_ocean;
 
-  void compute_thermal_forcing(const IceModelVec2S &ice_thickness, const IceModelVec2S &m_shelfbtemp, const IceModelVec2S &m_salinity_ocean, IceModelVec2S &thermal_forcing);
-  void compute_avg_thermal_forcing(const IceModelVec2CellType &mask, const IceModelVec2Int &m_basin_mask, IceModelVec2S &thermal_forcing, std::vector<double> &basin_TF); // per basin
+  void compute_thermal_forcing(const IceModelVec2S &ice_thickness, const IceModelVec2S &m_shelfbtemp, const IceModelVec2S &m_salinity_ocean, std::vector<double> &thermal_forcing)
+  void compute_avg_thermal_forcing(const IceModelVec2S &m_basinNumber, const IceModelVec2S &ice_shelf_mask, std::vector<double> &thermal_forcing, std::vector<double> &TF_avg); // per basin
   void melting_point_temperature(const IceModelVec2S &depth, IceModelVec2S &result) const;
-  void mass_flux(IceModelVec2S &thermal_forcing, const IceModelVec2Int &m_basin_mask, std::vector<double> &basin_TF, IceModelVec2S &result) const;
-
-  int m_n_basins;
+  void mass_flux(std::vector<double> &thermal_forcing, std::vector<double> &TF_avg, IceModelVec2S &result) const;
 };
 
 } // end of namespace ocean
