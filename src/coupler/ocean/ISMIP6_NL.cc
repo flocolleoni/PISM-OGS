@@ -70,15 +70,6 @@ ISMIP6_NL::ISMIP6_NL(IceGrid::ConstPtr g)
                                                   periodic,
                                                   LINEAR);
 
-/* m_basin_mask = IceModelVec2T::ForcingField(m_grid,
-                                                 file,
-                                                 "basin_mask",
-                                                 "", // no standard name
-                                                 buffer_size,
-                                                 evaluations_per_year,
-                                                 periodic,
-                                                 LINEAR);
-*/
   }
 
   m_shelfbtemp->set_attrs("climate_forcing",
@@ -237,75 +228,44 @@ void ISMIP6_NL::compute_thermal_forcing(const IceModelVec2S &ice_thickness,
 void ISMIP6_NL::compute_avg_thermal_forcing(const IceModelVec2CellType &cell_type,
                                          const IceModelVec2Int &basin_mask,
                                          IceModelVec2S &thermal_forcing,
-                                         IceModelVec2S &TF_avg) {
+                                         IceModelVec2S &basin_TF) {
+
+  std::vector<int> n_shelf_cells_per_basin(m_n_basins, 0);
+
+  std::vector<double> basin_TF(m_n_basins);
+  for (int basin_id = 0; basin_id < m_n_basins; basin_id++) {
+        basin_TF[basin_id] = 0.0;
+  }
 
   IceModelVec::AccessList list{&cell_type, &thermal_forcing, &basin_mask};
 
-  // Retrieve floating points
-  const IceModelVec2S shelf_mask;
+  // count the number of cells in the intersection of each shelf with all the basins
+  // sum thermal forcing over the floating areas in each basins
   for (Points p(*m_grid); p; p.next()) {
     const int i = p.i(), j = p.j();
+
+    int basin_id = int(basin_mask(i, j));
 
     auto M = cell_type(i, j);
+
     if (M == MASK_FLOATING) {
-      shelf_mask(i, j) = 1.0;
-    } else {
-      shelf_mask(i, j) = 0.0;
+      n_shelf_cells_per_basin[b]++;
+      basin_TF[b] += thermal_forcing(i, j);
     }
   }
 
-// BELOW THIS LINE THIS IS DIRECTLY COPIED FROM PICO.cc AND THUS NOT YET ADAPTED
-// TO THIS ROUTINE--- TO DO --- FLO Nov 10, 2020.
-  std::vector<double> basin_TF(m_n_shelves,m_n_basins);
-  basin_TF.resize(m_n_basins);
-  for (int basin_id = 0; basin_id < m_n_basins; basin_id++) {
-    basin_TF[basin_id] = 0.0;
-  }
 
-  std::vector<std::vector<int> > n_shelf_cells_per_basin(m_n_shelves, std::vector<int>(m_n_basins, 0));
+  // Compute averaged thermal forcing per basin
+ for (int basin_id = 0; basin_id < m_n_basins; basin_id++) {
 
-  // 1) count the number of cells in each shelf
-  // 2) count the number of cells in the intersection of each shelf with all the basins
-  {
-    for (Points p(*m_grid); p; p.next()) {
-      const int i = p.i(), j = p.j();
-      int s = shelf_mask.as_int(i, j);
-      int b = basin_mask.as_int(i, j);
-      n_shelf_cells_per_basin[s][b]++;
-      basin_TF[s][b] = thermal_forcing(i, j);
-    }
+      n_shelf_cells_per_basin[basin_id] = GlobalSum(m_grid->com, n_shelf_cells_per_basin[basin_id]);
+      basin_TF[basin_id]                = GlobalSum(m_grid->com, basin_TF[basin_id]);
 
-    // compute the sum for each basin for region that intersects with the
-    // area covered by an ice shelf.
-  for (int s = 0; s < m_n_shelves; s++) {
-    for (int b = 0; b < m_n_basins; b++) {
-      n_shelf_cells_per_basin[s][b] = GlobalSum(m_grid->com, n_shelf_cells_per_basin[s][b]);
-      basin_TF[s][b] = GlobalSum(m_grid->com, basin_TF[s][b]);
-
-    }
-  }
+      // Compute averaged thermal forcing per basin
+      basin_TF[basin_id] /= n_shelf_cells_per_basin[basin_id];
  }
 
-  for (Points p(*m_grid); p; p.next()) {
-    const int i = p.i(), j = p.j();
-
-    // make sure all temperatures are zero at the beginning of each time step
-    TF_avg(i, j) = 0.0; // in K
-
-    int s = shelf_mask.as_int(i, j);
-
-    if (mask.as_int(i, j) == MASK_FLOATING and s > 0) {
-      // note: shelf_mask = 0 in lakes
-
-      // weighted input depending on the number of shelf cells in each basin
-      for (int b = 1; b < m_n_basins; b++) { //Note: b=0 yields nan
-        TF_avg(i, j) += basin_TF[s][b]/ n_shelf_cells_per_basin[s][b];
-      }
-    }
-  }
 }
-
-
 
 //! \brief Computes mass flux in [kg m-2 s-1].
 /*!
