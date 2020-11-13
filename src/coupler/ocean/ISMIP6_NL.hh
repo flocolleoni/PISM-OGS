@@ -16,8 +16,8 @@
 // along with PISM; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#ifndef _POISMIP6_H_
-#define _POISMIP6_H_
+#ifndef _POISMIP6nl_H_
+#define _POISMIP6nl_H_
 
 #include "CompleteOceanModel.hh"
 //#include "pism/coupler/OceanModel.hh"
@@ -38,10 +38,10 @@ namespace ocean {
 //! @f$T_{o}@f$ are the heat capacity and temperature of the ocean mixed
 //! layer, @f$T_{f}@f$ is the freezing temperature of ocean water at the
 //! shelf bottom.
-class ISMIP6 : public CompleteOceanModel {
+class ISMIP6nl : public CompleteOceanModel {
 public:
-  ISMIP6(IceGrid::ConstPtr g);
-  virtual ~ISMIP6();
+  ISMIP6nl(IceGrid::ConstPtr g);
+  virtual ~ISMIP6nl();
 
 private:
   MaxTimestep max_timestep_impl(double t) const;
@@ -53,15 +53,19 @@ private:
   const IceModelVec2S& shelf_base_mass_flux_impl() const;
 
   // Variables to be read from input file
+  IceModelVec2Int m_basin_mask;
   IceModelVec2T::Ptr m_shelfbtemp;
   IceModelVec2T::Ptr m_salinity_ocean;
+  
 
-  void compute_thermal_forcing(const IceModelVec2S &ice_thickness, const IceModelVec2S &m_shelfbtemp, const IceModelVec2S &m_salinity_ocean, std::vector<double> &thermal_forcing)
-  void compute_avg_thermal_forcing(const IceModelVec2S &m_basinNumber, const IceModelVec2S &ice_shelf_mask, std::vector<double> &thermal_forcing, std::vector<double> &TF_avg); // per basin
-  void melting_point_temperature(const IceModelVec2S &depth, IceModelVec2S &result) const;
-  void mass_flux(std::vector<double> &thermal_forcing, std::vector<double> &TF_avg, IceModelVec2S &result) const;
+  void compute_thermal_forcing(const IceModelVec2S &ice_thickness, const IceModelVec2S &m_shelfbtemp, const IceModelVec2S &m_salinity_ocean, IceModelVec2S &thermal_forcing) ;
+  void compute_avg_thermal_forcing(const IceModelVec2CellType &mask, const IceModelVec2Int &m_basin_mask, const IceModelVec2S &thermal_forcing, std::vector<double> &basin_TF) ; // per basin
+  //void melting_point_temperature(const IceModelVec2S &depth, IceModelVec2S &result) const;
+  void mass_flux(const IceModelVec2S &thermal_forcing, const IceModelVec2Int &m_basin_mask, std::vector<double> &basin_TF, IceModelVec2S &result) ;
+
+  int m_n_basins;
 };
 
 } // end of namespace ocean
 } // end of namespace pism
-#endif /* _POISMIP6_H_ */
+#endif /* _POISMIP6nl_H_ */
