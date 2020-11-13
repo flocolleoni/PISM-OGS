@@ -36,7 +36,7 @@ export atmfile=$origfile
 export oceanfile=$input_data_dir/schmidtko/schmidtko_pism30km_means_ismip6.nc
 
 # PISM CONFIGURATION FILE
-cp /Users/flo/Recherche/MODELS/simulations/PISM/Ant_paleo_spinup_30km/pism_config_ant_paleo.cdl $input_data_dir
+cp ./pism_config_ant_paleo.cdl $input_data_dir
 export paramfile=$input_data_dir/pism_config_ant_paleo
 ncgen3 -o ${paramfile}.nc ${paramfile}.cdl
 

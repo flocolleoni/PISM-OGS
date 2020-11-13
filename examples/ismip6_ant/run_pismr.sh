@@ -2,7 +2,7 @@
 
 RUNDIR=/Users/flo/Recherche/MODELS/simulations/PISM/Ant_paleo_spinup_30km
 OUTDIR=/Users/flo/Recherche/MODELS/WORK_PISM/ANT_paleo_spinup
-DATAFILE=/Users/flo/Recherche/MODELS/PISM_DATA/pism-ais
+DATAFILE=./
 
 
 
@@ -15,4 +15,3 @@ cp pism_config_ant_paleo.cdl $DATAFILE
 ./run_paleo.sh 4
 
 #&> out.paleo
-
