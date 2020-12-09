@@ -1,4 +1,4 @@
-/* Copyright (C) 2015, 2017, 2018, 2019 PISM Authors
+/* Copyright (C) 2015, 2017, 2018, 2019, 2020 PISM Authors
  *
  * This file is part of PISM.
  *
@@ -46,7 +46,7 @@ Factory::Factory(IceGrid::ConstPtr g)
   add_model<Pico>("pico");
   add_model<Given>("given");
   add_model<ISMIP6>("ismip6");
-  add_model<ISMIP6_NL>("ismip6nl");
+  add_model<ISMIP6nl>("ismip6nl");
 
   add_modifier<Anomaly>("anomaly");
   add_modifier<Cache>("cache");
