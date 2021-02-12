@@ -33,7 +33,9 @@ PISM_EXEC=$pism_exec
 # INPUT DATA
 export origfile=$input_data_dir/bedmap2/bedmap2_martos_MAR_monthly_pism30km.nc
 export atmfile=$origfile
-export oceanfile=$input_data_dir/schmidtko/schmidtko_pism30km_means_ismip6.nc
+export oceanfile=$input_data_dir/ismip6/ISMIP6_obs_ocean_z60m_1995-2017_pism30km_2D.nc
+export basinsfile=$input_data_dir/ismip6/basinNumbers_pism30km.nc
+export deltaT_file=$input_data_dir/ismip6/coeff_gamma0_DeltaT_quadratic_non_local_median_pism30km.nc
 
 # PISM CONFIGURATION FILE
 cp ./pism_config_ant_paleo.cdl $input_data_dir

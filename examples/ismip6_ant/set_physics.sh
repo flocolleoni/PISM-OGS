@@ -17,8 +17,14 @@ export pre_atm_opts="-atmosphere given,elevation_change -atmosphere_given_period
           -temp_lapse_rate $tlapse -precip_adjustment scale -surface pdd"
 
 # ISMIP6 Ocean model
-#export pre_ocean_opts="-ocean ismip6 -ocean_ismip6_file $oceanfile"
-export pre_ocean_opts="-ocean ismip6nl -ocean_ismip6nl_file $oceanfile"
+# LOCAL METHOD
+#export pre_ocean_opts="-ocean ismip6_2d -ocean_ismip6_2d_TF_method local -ocean_ismip6_2d_file $oceanfile -gamma0 3.52e-4 \
+#          -ocean_ismip6_2d_deltaT_file $deltaT_file" 
+
+# NON LOCAL METHOD
+export pre_ocean_opts="-ocean ismip6_2d -ocean_ismip6_2d_TF_method non-local -ocean_ismip6_2d_file $oceanfile \
+            -gamma0 3.52e-4 -ocean_ismip6_2d_basins_file $basinsfile -ocean_ismip6_2d_deltaT_file $deltaT_file"
+
 
 # CALVING
 export pre_calv_opts="-calving eigen_calving,thickness_calving \

@@ -769,7 +769,7 @@ netcdf pism_overrides {
     pism_overrides:energy.bedrock_thermal.density_units = "kg meter-3";
 
     pism_overrides:energy.bedrock_thermal.file = "";
-    pism_overrides:energy.bedrock_thermal.file_doc = "Name of the file containing the geothermal flux field :var:`bheatflx`. Leave empty to read it from the :config:`input.file`.";
+    pism_overrides:energy.bedrock_thermal.file_doc = "Name of the file containing the geothermal flux field :var:`bheatflx`. Leave empty to read it from the :overrides:`input.file`.";
     pism_overrides:energy.bedrock_thermal.file_type = "string";
 
     pism_overrides:energy.bedrock_thermal.specific_heat_capacity = 1000.0;
@@ -821,15 +821,15 @@ netcdf pism_overrides {
     pism_overrides:energy.enthalpy.temperate_ice_thermal_conductivity_ratio_units = "pure number";
 
     pism_overrides:energy.margin_exclude_horizontal_advection = "yes";
-    pism_overrides:energy.margin_exclude_horizontal_advection_doc = "Exclude horizontal advection of energy at grid points near ice margins. See :config:`energy.margin_ice_thickness_limit`.";
+    pism_overrides:energy.margin_exclude_horizontal_advection_doc = "Exclude horizontal advection of energy at grid points near ice margins. See :overrides:`energy.margin_ice_thickness_limit`.";
     pism_overrides:energy.margin_exclude_horizontal_advection_type = "flag";
 
     pism_overrides:energy.margin_exclude_strain_heating = "yes";
-    pism_overrides:energy.margin_exclude_strain_heating_doc = "Exclude strain heating at grid points near ice margins. See :config:`energy.margin_ice_thickness_limit`.";
+    pism_overrides:energy.margin_exclude_strain_heating_doc = "Exclude strain heating at grid points near ice margins. See :overrides:`energy.margin_ice_thickness_limit`.";
     pism_overrides:energy.margin_exclude_strain_heating_type = "flag";
 
     pism_overrides:energy.margin_exclude_vertical_advection = "yes";
-    pism_overrides:energy.margin_exclude_vertical_advection_doc = "Exclude vertical advection of energy at grid points near ice margins. See :config:`energy.margin_ice_thickness_limit`.";
+    pism_overrides:energy.margin_exclude_vertical_advection_doc = "Exclude vertical advection of energy at grid points near ice margins. See :overrides:`energy.margin_ice_thickness_limit`.";
     pism_overrides:energy.margin_exclude_vertical_advection_type = "flag";
 
     pism_overrides:energy.margin_ice_thickness_limit = 100.0;
@@ -1722,39 +1722,43 @@ netcdf pism_overrides {
     pism_overrides:ocean.given.reference_year_type = "integer";
     pism_overrides:ocean.given.reference_year_units = "years";
 
-    pism_overrides:ocean.ismip6.file = "";
-    pism_overrides:ocean.ismip6.file_doc = "Name of the file containing climate forcing fields.";
-    pism_overrides:ocean.ismip6.file_option = "ocean_ismip6_file";
-    pism_overrides:ocean.ismip6.file_type = "string";
+    pism_overrides:ocean.ismip6_2d.thermal_forcing_method = "local";
+    pism_overrides:ocean.ismip6_2d.thermal_forcing_method_doc = "Name of the thermal forcing method - local / non-local";
+    pism_overrides:ocean.ismip6_2d.thermal_forcing_method_option = "ocean_ismip6_2d_TF_method";
+    pism_overrides:ocean.ismip6_2d.thermal_forcing_method_type = "string";
 
-    pism_overrides:ocean.ismip6.period = 0;
-    pism_overrides:ocean.ismip6.period_doc = "Length of the period of the climate forcing data. Set to zero to disable.";
-    pism_overrides:ocean.ismip6.period_option = "ocean_ismip6_period";
-    pism_overrides:ocean.ismip6.period_type = "integer";
-    pism_overrides:ocean.ismip6.period_units = "years";
+    pism_overrides:ocean.ismip6_2d.file = "";
+    pism_overrides:ocean.ismip6_2d.file_doc = "Name of the file containing oceanic forcing fields.";
+    pism_overrides:ocean.ismip6_2d.file_option = "ocean_ismip6_2d_file";
+    pism_overrides:ocean.ismip6_2d.file_type = "string";
 
-    pism_overrides:ocean.ismip6.reference_year = 0;
-    pism_overrides:ocean.ismip6.reference_year_doc = "Reference year to use when ``ocean.ismip6.period`` is active.";
-    pism_overrides:ocean.ismip6.reference_year_option = "ocean_ismip6_reference_year";
-    pism_overrides:ocean.ismip6.reference_year_type = "integer";
-    pism_overrides:ocean.ismip6.reference_year_units = "years";
+    pism_overrides:ocean.ismip6_2d.basins_file = "";
+    pism_overrides:ocean.ismip6_2d.basins_file_doc = "Name of the file containing drainage basins mask.";
+    pism_overrides:ocean.ismip6_2d.basins_file_option = "ocean_ismip6_2d_basins_file";
+    pism_overrides:ocean.ismip6_2d.basins_file_type = "string";
 
-    pism_overrides:ocean.ismip6nl.file = "";
-    pism_overrides:ocean.ismip6nl.file_doc = "Name of the file containing climate forcing fields.";
-    pism_overrides:ocean.ismip6nl.file_option = "ocean_ismip6nl_file";
-    pism_overrides:ocean.ismip6nl.file_type = "string";
+    pism_overrides:ocean.ismip6_2d.deltaT_file = "";
+    pism_overrides:ocean.ismip6_2d.deltaT_file_doc = "Name of the file containing drainage basins mask.";
+    pism_overrides:ocean.ismip6_2d.deltaT_file_option = "ocean_ismip6_2d_deltaT_file";
+    pism_overrides:ocean.ismip6_2d.deltaT_file_type = "string";
 
-    pism_overrides:ocean.ismip6nl.period = 0;
-    pism_overrides:ocean.ismip6nl.period_doc = "Length of the period of the climate forcing data. Set to zero to disable.";
-    pism_overrides:ocean.ismip6nl.period_option = "ocean_ismip6nl_period";
-    pism_overrides:ocean.ismip6nl.period_type = "integer";
-    pism_overrides:ocean.ismip6nl.period_units = "years";
+    pism_overrides:ocean.ismip6_2d.period = 0;
+    pism_overrides:ocean.ismip6_2d.period_doc = "Length of the period of the climate forcing data. Set to zero to disable.";
+    pism_overrides:ocean.ismip6_2d.period_option = "ocean_ismip6_2d_period";
+    pism_overrides:ocean.ismip6_2d.period_type = "integer";
+    pism_overrides:ocean.ismip6_2d.period_units = "years";
 
-    pism_overrides:ocean.ismip6nl.reference_year = 0;
-    pism_overrides:ocean.ismip6nl.reference_year_doc = "Reference year to use when ``ocean.ismip6nl.period`` is active.";
-    pism_overrides:ocean.ismip6nl.reference_year_option = "ocean_ismip6nl_reference_year";
-    pism_overrides:ocean.ismip6nl.reference_year_type = "integer";
-    pism_overrides:ocean.ismip6nl.reference_year_units = "years";
+    pism_overrides:ocean.ismip6_2d.reference_year = 0;
+    pism_overrides:ocean.ismip6_2d.reference_year_doc = "Reference year to use when ``ocean.ismip6_2d.period`` is active.";
+    pism_overrides:ocean.ismip6_2d.reference_year_option = "ocean_ismip6_2d_reference_year";
+    pism_overrides:ocean.ismip6_2d.reference_year_type = "integer";
+    pism_overrides:ocean.ismip6_2d.reference_year_units = "years";
+
+    pism_overrides:ocean.ismip6_2d.heat_exchange_coefficent = 2e-5;
+    pism_overrides:ocean.ismip6_2d.heat_exchange_coefficent_doc = "Turbulent heat exchange coefficient";
+    pism_overrides:ocean.ismip6_2d.heat_exchange_coefficent_option = "gamma0";
+    pism_overrides:ocean.ismip6_2d.heat_exchange_coefficent_type = "number";
+    pism_overrides:ocean.ismip6_2d.heat_exchange_coefficent_units = "meters second-1";
 
     pism_overrides:ocean.melange_back_pressure_fraction = 0.0;
     pism_overrides:ocean.melange_back_pressure_fraction_doc = "default melange back pressure fraction";
@@ -1870,7 +1874,7 @@ netcdf pism_overrides {
 
     pism_overrides:output.backup_size = "small";
     pism_overrides:output.backup_size_choices = "none,small,medium,big_2d,big";
-    pism_overrides:output.backup_size_doc = "The 'size' of a backup file. See configuration parameters output.sizes.medium, output.sizes.big_2d, output.sizes.big";
+    pism_overrides:output.backup_size_doc = "The 'size' of a backup file. See overridesuration parameters output.sizes.medium, output.sizes.big_2d, output.sizes.big";
     pism_overrides:output.backup_size_option = "backup_size";
     pism_overrides:output.backup_size_type = "keyword";
 
@@ -1973,7 +1977,7 @@ netcdf pism_overrides {
 
     pism_overrides:output.size = "medium";
     pism_overrides:output.size_choices = "none,small,medium,big_2d,big";
-    pism_overrides:output.size_doc = "The 'size' of an output file. See configuration parameters output.sizes.medium, output.sizes.big_2d, output.sizes.big";
+    pism_overrides:output.size_doc = "The 'size' of an output file. See overridesuration parameters output.sizes.medium, output.sizes.big_2d, output.sizes.big";
     pism_overrides:output.size_option = "o_size";
     pism_overrides:output.size_type = "keyword";
 
@@ -1996,7 +2000,7 @@ netcdf pism_overrides {
 
     pism_overrides:output.snapshot.size = "small";
     pism_overrides:output.snapshot.size_choices = "none,small,medium,big_2d,big";
-    pism_overrides:output.snapshot.size_doc = "The 'size' of a snapshot file. See configuration parameters output.sizes.medium, output.sizes.big_2d, output.sizes.big";
+    pism_overrides:output.snapshot.size_doc = "The 'size' of a snapshot file. See overridesuration parameters output.sizes.medium, output.sizes.big_2d, output.sizes.big";
     pism_overrides:output.snapshot.size_option = "save_size";
     pism_overrides:output.snapshot.size_type = "keyword";
 
@@ -2140,7 +2144,7 @@ netcdf pism_overrides {
     pism_overrides:stress_balance.sia.limit_diffusivity_option = "limit_sia_diffusivity";
     pism_overrides:stress_balance.sia.limit_diffusivity_type = "flag";
 
-    pism_overrides:stress_balance.sia.max_diffusivity = 200.0;
+    pism_overrides:stress_balance.sia.max_diffusivity = 100.0;
     pism_overrides:stress_balance.sia.max_diffusivity_doc = "Maximum allowed diffusivity of the SIA flow. PISM stops with an error message if the SIA diffusivity exceeds this limit.";
     pism_overrides:stress_balance.sia.max_diffusivity_type = "number";
     pism_overrides:stress_balance.sia.max_diffusivity_units = "m2 s-1";
@@ -2442,8 +2446,8 @@ netcdf pism_overrides {
     pism_overrides:surface.pdd.air_temp_all_precip_as_snow_type = "number";
     pism_overrides:surface.pdd.air_temp_all_precip_as_snow_units = "Kelvin";
 
-    pism_overrides:surface.pdd.balance_year_start_day = 94;
-    pism_overrides:surface.pdd.balance_year_start_day_doc = "274 day of year for October 1st, beginning of the balance year in northern latitudes.";
+    pism_overrides:surface.pdd.balance_year_start_day = 274;
+    pism_overrides:surface.pdd.balance_year_start_day_doc = "day of year for October 1st, beginning of the balance year in northern latitudes.";
     pism_overrides:surface.pdd.balance_year_start_day_type = "integer";
     pism_overrides:surface.pdd.balance_year_start_day_units = "ordinal day number";
 
@@ -2674,6 +2678,6 @@ netcdf pism_overrides {
     pism_overrides:time_stepping.skip.max_type = "integer";
     pism_overrides:time_stepping.skip.max_units = "count";
 
-    pism_overrides:long_name = "PISM configuration flags and parameters.";
+    pism_overrides:long_name = "PISM overridesuration flags and parameters.";
     pism_overrides:long_name_doc = "The 'long_name' attribute is required by CF conventions. It is not used by PISM itself.";
 }
